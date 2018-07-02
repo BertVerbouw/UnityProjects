@@ -14,6 +14,56 @@ public class HexCell : MonoBehaviour {
     bool hasIncomingRiver, hasOutgoingRiver;
     HexDirection incomingRiver, outgoingRiver;
 
+    int urbanLevel, farmLevel, plantLevel;
+
+    public int UrbanLevel
+    {
+        get
+        {
+            return urbanLevel;
+        }
+        set
+        {
+            if (urbanLevel != value)
+            {
+                urbanLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int FarmLevel
+    {
+        get
+        {
+            return farmLevel;
+        }
+        set
+        {
+            if (farmLevel != value)
+            {
+                farmLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
+    public int PlantLevel
+    {
+        get
+        {
+            return plantLevel;
+        }
+        set
+        {
+            if (plantLevel != value)
+            {
+                plantLevel = value;
+                RefreshSelfOnly();
+            }
+        }
+    }
+
     public int WaterLevel
     {
         get

@@ -9,6 +9,7 @@ public class HexMapEditor : MonoBehaviour {
 
 	int activeElevation;
     int activeWaterLevel;
+    int activeUrbanLevel, activeFarmLevel, activePlantLevel;
 
     Color activeColor;
 
@@ -17,6 +18,7 @@ public class HexMapEditor : MonoBehaviour {
 	bool applyColor;
 	bool applyElevation = true;
     bool applyWaterLevel = true;
+    bool applyUrbanLevel, applyFarmLevel, applyPlantLevel;
 
     enum OptionalToggle
     {
@@ -35,6 +37,26 @@ public class HexMapEditor : MonoBehaviour {
 			activeColor = colors[index];
 		}
 	}
+
+    public void SetApplyFarmLevel(bool toggle)
+    {
+        applyFarmLevel = toggle;
+    }
+
+    public void SetFarmLevel(float level)
+    {
+        activeFarmLevel = (int)level;
+    }
+
+    public void SetApplyPlantLevel(bool toggle)
+    {
+        applyPlantLevel = toggle;
+    }
+
+    public void SetPlantLevel(float level)
+    {
+        activePlantLevel = (int)level;
+    }
 
     public void SetApplyWaterLevel(bool toggle)
     {
@@ -111,6 +133,17 @@ public class HexMapEditor : MonoBehaviour {
         }
     }
 
+
+    public void SetApplyUrbanLevel(bool toggle)
+    {
+        applyUrbanLevel = toggle;
+    }
+
+    public void SetUrbanLevel(float level)
+    {
+        activeUrbanLevel = (int)level;
+    }
+
     void ValidateDrag(HexCell currentCell)
     {
         for (
@@ -144,7 +177,7 @@ public class HexMapEditor : MonoBehaviour {
 		}
     }
 
-	void EditCell (HexCell cell) {
+    void EditCell (HexCell cell) {
 		if (cell) {
 			if (applyColor) {
 				cell.Color = activeColor;
@@ -163,6 +196,18 @@ public class HexMapEditor : MonoBehaviour {
             if (applyWaterLevel)
             {
                 cell.WaterLevel = activeWaterLevel;
+            }
+            if (applyUrbanLevel)
+            {
+                cell.UrbanLevel = activeUrbanLevel;
+            }
+            if (applyFarmLevel)
+            {
+                cell.FarmLevel = activeFarmLevel;
+            }
+            if (applyPlantLevel)
+            {
+                cell.PlantLevel = activePlantLevel;
             }
             if (isDrag)
             {
