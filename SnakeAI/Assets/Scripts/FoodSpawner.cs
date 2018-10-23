@@ -6,6 +6,9 @@ public class FoodSpawner : MonoBehaviour
 {
     //food
     public GameObject foodPrefab;
+    public int SpawnSpeed = 5;
+    public int SpawnStart = 0;
+    public int FoodPoints = 0;
 
     //Borders
     public Transform topBorder;
@@ -18,7 +21,12 @@ public class FoodSpawner : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        InvokeRepeating("Spawn", 1, 5);
+        Restart();
+    }
+
+    public void Stop()
+    {
+        CancelInvoke();
     }
 
     void Spawn()
@@ -30,5 +38,21 @@ public class FoodSpawner : MonoBehaviour
             Destroy(food);
         }
         food = Instantiate(foodPrefab, new Vector2(x, y), Quaternion.identity);
+        FoodPoints = SpawnSpeed;
+    }
+
+    void FoodScore()
+    {
+        FoodPoints--;
+    }
+
+    public void Restart()
+    {
+        if (food != null)
+        {
+            Destroy(food);
+        }
+        InvokeRepeating("Spawn", SpawnStart, SpawnSpeed);
+        InvokeRepeating("FoodScore", SpawnStart, 1);
     }
 }

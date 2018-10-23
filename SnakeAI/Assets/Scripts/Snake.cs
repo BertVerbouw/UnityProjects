@@ -1,18 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Snake : MonoBehaviour
 {
-    private Vector2 dir = Vector2.up;
-    List<Transform> tail = new List<Transform>();
-    bool foodEaten = false;
-    public GameObject tailObject;
+    private Vector2 _dir = Vector2.up;
+    private List<Transform> _tail = new List<Transform>();
+    private bool _foodEaten = false;
+    public GameObject TailObject;
+    public int Speed = 5;
     // Use this for initialization
     void Start()
     {
-        InvokeRepeating("Move", (float)1 / Variables.Speed, (float)1 / Variables.Speed);
+        Restart();
     }
 
     // Update is called once per frame
@@ -20,58 +23,83 @@ public class Snake : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            dir = Vector2.right;
+            if (_tail.Count == 0 || _dir != Vector2.left)
+            {
+                _dir = Vector2.right;
+            }
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            dir = Vector2.down;
+            if (_tail.Count == 0 || _dir != Vector2.up)
+            {
+                _dir = Vector2.down;
+            }
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            dir = Vector2.left;
+            if (_tail.Count == 0 || _dir != Vector2.right)
+            {
+                _dir = Vector2.left;
+            }
         }
         else if (Input.GetKey(KeyCode.UpArrow))
         {
-            dir = Vector2.up;
+            if (_tail.Count == 0 || _dir != Vector2.down)
+            {
+                _dir = Vector2.up;
+            }
         }
+    }
+
+    public void Stop()
+    {
+        CancelInvoke();
+    }
+
+    public void Restart()
+    {
+        foreach (var tail in _tail)
+        {
+            Destroy(tail.gameObject);
+        }
+        _tail.Clear();
+        _dir = Vector2.up;
+        transform.localPosition = new Vector2(0, 0);
+        InvokeRepeating("Move", (float)1 / Speed, (float)1 / Speed);
     }
 
     void Move()
     {
         Vector2 v = transform.position;
-        transform.Translate(dir);
+        transform.Translate(_dir);
 
-        if (foodEaten)
+        if (_foodEaten)
         {
-            tail.Insert(0, Instantiate(tailObject, v, Quaternion.identity).transform);
-            foodEaten = false;
+            _tail.Insert(0, Instantiate(TailObject, v, Quaternion.identity).transform);
+            _foodEaten = false;
         }
-        else if (tail.Count > 0)
+        else if (_tail.Count > 0)
         {
             // Move last Tail Element to where the Head was
-            tail.Last().position = v;
+            _tail.Last().position = v;
 
             // Add to front of list, remove from the back
-            tail.Insert(0, tail.Last());
-            tail.RemoveAt(tail.Count - 1);
+            _tail.Insert(0, _tail.Last());
+            _tail.RemoveAt(_tail.Count - 1);
         }
     }
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        // Food?
         if (coll.name.StartsWith("FoodPrefab"))
         {
-            // Get longer in next Move call
-            foodEaten = true;
-
-            // Remove the Food
+            _foodEaten = true;
+            Variables.Eaten = true;
             Destroy(coll.gameObject);
         }
-        // Collided with Tail or Border
         else
         {
-            // ToDo 'You lose' screen
+            Variables.GameOver = true;
         }
     }
 }

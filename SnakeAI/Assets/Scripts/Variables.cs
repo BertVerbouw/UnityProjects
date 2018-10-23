@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
+using System.Threading.Tasks;
 
-public class Variables : MonoBehaviour
+public static class Variables
 {
-    // pixels/second
-    public static int Speed { get; set; } = 5;
+    public static bool GameOver = false;
+    public static bool Eaten = false;
 }
 
